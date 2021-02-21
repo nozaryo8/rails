@@ -37,6 +37,7 @@ class UsersEditTest < ActionDispatch::IntegrationTest
 
   test "successful edit with friendly forwarding" do
     get edit_user_path(@user)
+    assert_equal session[:forwarding_url],"http://www.example.com/users/762146111/edit"
     log_in_as(@user)
     assert_redirected_to edit_user_url(@user)
     name  = "Foo Bar"

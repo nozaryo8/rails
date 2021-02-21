@@ -5,6 +5,7 @@ class UsersController < ApplicationController
 
   def index
     @users = User.paginate(page: params[:page])
+    
   end
 
   def show
@@ -13,6 +14,7 @@ class UsersController < ApplicationController
 
   def new
     @user = User.new
+    
   end
 
   def create
@@ -28,6 +30,7 @@ class UsersController < ApplicationController
 
   def edit
     @user = User.find(params[:id])
+    
   end
 
   def update
@@ -58,9 +61,10 @@ class UsersController < ApplicationController
     # ログイン済みユーザーかどうか確認
     def logged_in_user
       unless logged_in?
-        store_location
+        store_location # アクセスしようとしたURLを覚えておく 10.30
+        
         flash[:danger] = "Please log in."
-        redirect_to login_url
+        redirect_to login_url 
       end
     end
 
