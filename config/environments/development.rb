@@ -12,6 +12,7 @@ Rails.application.configure do
   # Show full error reports.
   config.consider_all_requests_local = true
 
+  
   # Enable/disable caching. By default caching is disabled.
   # Run rails dev:cache to toggle caching.
   if Rails.root.join('tmp', 'caching-dev.txt').exist?
@@ -34,6 +35,13 @@ Rails.application.configure do
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
 
+   #リスト 11.16: development環境のメール設定
+  host = "03488f6649d1472cacd393c5fcdbdbb2.vfs.cloud9.ap-northeast-1.amazonaws.com"
+  #host = "ap-northeast-1.console.aws.amazon.com" #自分の環境のホスト
+  
+  # クラウドIDEの場合は以下をお使いください
+  config.action_mailer.default_url_options = { host: host, protocol: 'https' }
+  
   config.action_mailer.perform_caching = false
 
   # Print deprecation notices to the Rails logger.
@@ -62,4 +70,9 @@ Rails.application.configure do
 
   # Cloud9 への接続を許可する
   config.hosts.clear
+  
+  
+ 
+   
+ 
 end

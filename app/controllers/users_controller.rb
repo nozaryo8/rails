@@ -4,12 +4,18 @@ class UsersController < ApplicationController
   before_action :admin_user,     only: :destroy
 
   def index
-    @users = User.paginate(page: params[:page])
-    
+    # インスタンス変数@usersに以下を代入
+    # Userテーブルからactivated:がtrueのデータをすべて取り出してpaginate(page: params[:page])する
+    @users = User.where(activated: true).paginate(page: params[:page])
   end
 
   def show
+    # @userにUserテーブルから(params[:id])のデータを取り出して代入
     @user = User.find(params[:id])
+    #root_urlにリダイレクト　trueの場合ここで処理が終了する→　@userが有効ではない場合
+    #false(@userが有効）な場合はリダイレクトは実行されない
+    redirect_to root_url and return unless @user.activated?
+    #同じアクション内でrenderメソッドを複数呼び出すと、エラーになるので、and returnを付ける
   end
 
   def new
@@ -20,9 +26,10 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     if @user.save
-      log_in @user
-      flash[:success] = "Welcome to the Sample App!"
-      redirect_to @user
+      # Userモデルで定義したメソッド（send_activation_email）を呼び出して有効化メールを送信
+      @user.send_activation_email
+      flash[:info] = "メールを確認してアカウントを有効化してね"
+      redirect_to root_url
     else
       render 'new'
     end
