@@ -8,5 +8,8 @@ Rails.application.routes.draw do
   post   '/login',   to: 'sessions#create'
   delete '/logout',  to: 'sessions#destroy'
   resources :users
+  # account_activationsresourceのeditへのルーティングのみを生成
   resources :account_activations, only: [:edit] #リスト11.1 アカウント有効化に使うリソース（editアクション）を追加する
+  #password_resetsのnew、create、edit、updateのルーティングを生成 
+  resources :password_resets,     only: [:new, :create, :edit, :update]
 end

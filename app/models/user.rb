@@ -1,5 +1,6 @@
 class User < ApplicationRecord
-  attr_accessor :remember_token,:activation_token
+  #仮想の属性:remember_token、:activation_token、:reset_tokenをUserクラスに定義
+  attr_accessor :remember_token,:activation_token, :reset_token
   #before_save { self.email = email.downcase } 下のdowncasa_emailメソッドに置き換える
   before_save :downcase_email
   before_create :create_activation_digest
@@ -45,7 +46,20 @@ class User < ApplicationRecord
     #Userメイラー内の呼び出しでは、@userがselfに変更されている点にもご注目ください。
     UserMailer.account_activation(self).deliver_now
   end
-
+  
+   # パスワード再設定の属性を設定する リスト 12.6
+  def create_reset_digest
+    # （呼び出し先で考えると）@userのreset_tokenに代入→User.new_token
+    self.reset_token = User.new_token
+    # :reset_digestの値をUser.digest(reset_token)で上書き保存
+    update_columns(reset_digest:  User.digest(reset_token), reset_sent_at: Time.zone.now)
+    
+  end
+  
+   # パスワード再設定のメールを送信する　リスト 12.6
+  def send_password_reset_email
+    UserMailer.password_reset(self).deliver_now
+  end
   # 渡されたトークンがダイジェストと一致したらtrueを返す
   # def authenticated?(remember_token)
   #   return false if remember_digest.nil?
@@ -64,6 +78,12 @@ class User < ApplicationRecord
   # ユーザーのログイン情報を破棄する
   def forget
     update_attribute(:remember_digest, nil)
+  end
+  
+  # パスワード再設定の期限が切れている場合はtrueを返す
+  def password_reset_expired?
+    # reset_sent_atの値（再設定メールの送信時刻）　右辺より早い時刻　2時間前
+    reset_sent_at < 2.hours.ago
   end
   
   private
