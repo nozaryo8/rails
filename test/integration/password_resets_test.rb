@@ -117,6 +117,6 @@ class PasswordResetsTest < ActionDispatch::IntegrationTest
     follow_redirect!
     # リダイレクトされたページに'有効期限が切れています'が含まれている
     # 日本語化の影響で下記だけど、本文通りの場合は→ assert_match /expired/i, response.body
-    assert_match '有効期限が切れています', response.body
+    assert_match /expired/i, response.body
   end
 end
