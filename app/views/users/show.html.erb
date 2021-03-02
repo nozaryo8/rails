@@ -8,4 +8,15 @@
       </h1>
     </section>
   </aside>
+  <div class="col-md-8">
+    <!-- @user.micropostsがあったら表示する-->
+    <% if @user.microposts.any? %>
+      <h3>Microposts (<%= @user.microposts.count %>)</h3>
+      <ol class="microposts">
+        <!--_micropost.html.erbパーシャルを使ってマイクロポストのコレクションを表示しようとするとこう↓ -->
+        <%= render @microposts %>
+      </ol>
+      <%= will_paginate @microposts %>
+    <% end %>
+  </div>
 </div>

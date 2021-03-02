@@ -1,0 +1,19 @@
+<!--CSSのidにマイクロポストのidを割り振っている　一般的に良いとされる慣習との事-->
+<li id="micropost-<%= micropost.id %>">
+  <!--gravatarからユーザの画像を呼び出して表示＆ユーザー詳細へリンク-->
+  <%= link_to gravatar_for(micropost.user, size: 50), micropost.user %>
+  <span class="user"><%= link_to micropost.user.name, micropost.user %></span>
+  <span class="content">
+    <%= micropost.content %>
+    <%= image_tag micropost.display_image if micropost.image.attached? %>
+  </span>
+  <span class="timestamp">
+    <!--どれくらい前かを文字列で返すヘルパーメソッド-->
+    Posted <%= time_ago_in_words(micropost.created_at) %> ago.
+    <!--マイクロポストのパーシャルに削除リンクを追加する-->
+    <% if current_user?(micropost.user) %>
+      <%= link_to "delete", micropost, method: :delete,
+                                       data: { confirm: "You sure?" } %>
+    <% end %>
+  </span>
+</li>

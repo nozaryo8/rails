@@ -1,4 +1,7 @@
 class User < ApplicationRecord
+  # UserとそのMicropostは has_many (1対多) の関係性がある
+  # （ユーザーが削除された時）紐づいているマイクロポストも削除される
+  has_many :microposts, dependent: :destroy
   #仮想の属性:remember_token、:activation_token、:reset_tokenをUserクラスに定義
   attr_accessor :remember_token,:activation_token, :reset_token
   #before_save { self.email = email.downcase } 下のdowncasa_emailメソッドに置き換える
@@ -84,6 +87,12 @@ class User < ApplicationRecord
   def password_reset_expired?
     # reset_sent_atの値（再設定メールの送信時刻）　右辺より早い時刻　2時間前
     reset_sent_at < 2.hours.ago
+  end
+  
+   # 試作feedの定義
+  # 完全な実装は次章の「ユーザーをフォローする」を参照
+  def feed
+    Micropost.where("user_id = ?", id)
   end
   
   private

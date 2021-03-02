@@ -1,0 +1,9 @@
+<% if @feed_items.any? %>
+  <ol class="microposts">
+    <!-- このとき、@feed_itemsの各要素がMicropostクラスを持っていたため、RailsはMicropostのパーシャルを呼び出す
+    このように、Railsは対応する名前のパーシャルを、渡されたリソースのディレクトリ内から探しにいくことができます。-->
+    <%= render @feed_items %>
+  </ol>
+  <%= will_paginate @feed_items,
+                    params: { controller: :static_pages, action: :home } %>
+<% end %>

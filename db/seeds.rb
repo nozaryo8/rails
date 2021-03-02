@@ -20,3 +20,16 @@ User.create!(name:  name,
       activated: true,
       activated_at: Time.zone.now)
 end
+
+# ユーザーの一部を対象にマイクロポストを生成する
+# マイクロポストのサンプルを追加
+# usersに　Userモデルを　created_atの順に並び替えて　上から（6個を）配列として　代入
+users = User.order(:created_at).take(6)
+50.times do
+  # contentに　Faker::Loremで作ったサンプルを代入（Faker::Loremから文章を5個取り出す）
+  content = Faker::Lorem.sentence(word_count: 5)
+  # usersを順番に取り出してブロック内を実行
+  # 取り出した要素をuserに代入　userに紐づいたmicropostを作成（content属性に変数contentの値）
+  users.each { |user| user.microposts.create!(content: content) }
+end
+#「user1のマイクロポスト１・・・user6のマイクロポスト1、user1のマイクロポスト2・・・user6のマイクロポスト2」といった繰り返しになっている
