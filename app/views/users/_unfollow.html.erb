@@ -1,0 +1,7 @@
+<!--current_user（ログイン中のユーザー）と結び付いたリレーションシップからfollowed_idが @user.idのデータを取得-->
+<!--deleteメソッドを指定-->
+<!--Ajaxを採用　→　form_for・・・,remote: true-->
+<%= form_with(model: current_user.active_relationships.find_by(followed_id: @user.id),
+                                  html: { method: :delete }, remote: true) do |f| %>
+  <%= f.submit "Unfollow", class: "btn" %>
+<% end %>

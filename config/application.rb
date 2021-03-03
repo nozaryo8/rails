@@ -19,5 +19,8 @@ module SampleApp
     config.active_record.default_timezone = :local
     config.i18n.default_locale = :en
     config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.yml').to_s]
+    
+    # 認証トークンをremoteフォームに埋め込む(ブラウザ側でJavaScriptが無効になっていた場合でもうまく動くようにする)
+    config.action_view.embed_authenticity_token_in_remote_forms = true
   end
 end

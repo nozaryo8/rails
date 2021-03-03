@@ -1,0 +1,13 @@
+<!--@userがログインユーザー（current_user）でなければブロック内を表示-->
+<% unless current_user?(@user) %>
+  <div id="follow_form">
+  <!--@userをログインユーザー（current_user）がフォローしていたらブロック内を表示-->
+  <% if current_user.following?(@user) %>
+    <!--unfollowのパーシャルを呼び出し-->
+    <%= render 'unfollow' %>
+  <% else %>
+    <!--followのパーシャルを表示-->
+    <%= render 'follow' %>
+  <% end %>
+  </div>
+<% end %>

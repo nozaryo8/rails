@@ -78,4 +78,47 @@ class UserTest < ActiveSupport::TestCase
       @user.destroy
     end
   end
+  
+  test "should follow and unfollow a user" do
+    michael = users(:michael)
+    archer  = users(:archer)
+    # michaelはarcherをフォローしていないか
+    assert_not michael.following?(archer)
+    # michaelがarcherをフォロー
+    michael.follow(archer)
+    # michaelはarcherをフォローしているか
+    assert michael.following?(archer)
+    # archerのフォロワーにmichaelが含まれる
+    assert archer.followed_by?(michael)
+    # michaelのarcherへのフォローをやめる
+    michael.unfollow(archer)
+    # michaelはarcherをフォローしていないか
+    assert_not michael.following?(archer)
+  end
+  
+  test "feed should have the right posts" do
+    # michaelはlanaをフォローしている　archerはフォローしていない
+    # /sample_app/test/fixtures/relationships.yml参照
+    michael = users(:michael)
+    archer  = users(:archer)
+    lana    = users(:lana)
+    # フォローしているユーザーの投稿を確認
+    # lanaのmicropostsを順に取り出してpost_followingに代入
+    lana.microposts.each do |post_following|
+      # michaelのfeedにpost_followingが含まれている
+      assert michael.feed.include?(post_following)
+    end
+    # 自分自身の投稿を確認
+    # michaelのmicropostsを順に取り出してpost_selfに代入
+    michael.microposts.each do |post_self|
+      # michaelのfeedにpost_selfが含まれている
+      assert michael.feed.include?(post_self)
+    end
+    # フォローしていないユーザーの投稿を確認
+    # archerのmicropostsを順に取り出してpost_unfollowedに代入
+    archer.microposts.each do |post_unfollowed|
+      # michaelのfeedにpost_unfollowedが含まれていない
+      assert_not michael.feed.include?(post_unfollowed)
+    end
+  end
 end
